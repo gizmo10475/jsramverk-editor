@@ -1,0 +1,5 @@
+ @import '~quill/dist/quill.bubble.css'; 
+
+::ng-deep .ql-snow .ql-editor h1 {
+    font-size: 18px;
+}

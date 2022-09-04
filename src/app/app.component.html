@@ -1,0 +1,15 @@
+<div class="toolbar">
+  Eddies editor aka Eddietor
+</div>
+<div class="divquil">
+
+
+  <form [formGroup]="editForm" (submit)="Save()">
+    <quill-editor formControlName="text"></quill-editor>
+    <br>
+    <button type="submit">Spara</button>
+  </form>
+
+
+
+</div>
