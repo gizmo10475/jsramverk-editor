@@ -3,13 +3,8 @@
 </div>
 <div class="divquil">
 
-
-  <form [formGroup]="editForm" (submit)="Save()">
-    <quill-editor formControlName="text"></quill-editor>
-    <br>
-    <button type="submit">Spara</button>
-  </form>
-
-
+  <quill-editor (onContentChanged)="onContentChanged($event)"></quill-editor>
+  <br>
+  <button type="submit" (click)="Save()">Spara</button>
 
 </div>

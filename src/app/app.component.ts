@@ -34,14 +34,14 @@ var htmlText = "";
 
 
 export class AppComponent {
-  editForm: FormGroup;
-  text: string = "";
+  // editForm: FormGroup;
+  text: string;
 
-  ngOnInit() {
-    this.editForm = new FormGroup({
-      text: new FormControl(null)
-    });
-  }
+  // ngOnInit() {
+  //   this.editForm = new FormGroup({
+  //     text: new FormControl(null)
+  //   });
+  // }
 
   options: CustomOption[] = [
     {
@@ -52,11 +52,15 @@ export class AppComponent {
 
   onContentChanged = (event) => {
     // console.log(event.html);
-    // this.text = this.editForm.value.text;
+    this.text = event;
+    // console.log(event.html);
+    
   }
 
   public Save() {
-    console.log(this.editForm.value.text);
+    // console.log(this.editForm.value.text);
+    console.log(this.text);
+    
   }
 
 }
