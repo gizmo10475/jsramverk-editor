@@ -25,7 +25,6 @@ const modules = {
     ['link', 'image', 'video']                         // link and image, video
   ]
 };
-var htmlText = "";
 
 @Component({
   selector: "app-root",
@@ -35,7 +34,7 @@ var htmlText = "";
 
 export class AppComponent {
   // editForm: FormGroup;
-  text: string;
+  text: any;
 
   // ngOnInit() {
   //   this.editForm = new FormGroup({
@@ -53,14 +52,11 @@ export class AppComponent {
   onContentChanged = (event) => {
     // console.log(event.html);
     this.text = event;
-    // console.log(event.html);
-    
+    // console.log(this.text);
   }
 
   public Save() {
-    // console.log(this.editForm.value.text);
-    console.log(this.text);
-    
+    console.log(this.text.text);
   }
 
 }
