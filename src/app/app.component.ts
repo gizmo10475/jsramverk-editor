@@ -3,6 +3,7 @@ import { CustomOption } from "ngx-quill";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import Quill from 'quill';
 
 const modules = {
   toolbar: [
@@ -44,6 +45,10 @@ export class AppComponent {
   allData: any;
   allDataTitle: string[] = [];;
   selectedDocument: any;
+  editor: Quill | null = null;
+
+  content = '<h1>Test</h1><p>Hi There!</p>';
+
   constructor(
     private http: HttpClient,
     private formBuilder: FormBuilder,
@@ -100,9 +105,19 @@ export class AppComponent {
     
 	}
 
-
   getOneDocument() {
     console.log("hej");
+    
+    for (let index = 0; index < this.allData.length; index++) {
+      const element = this.allData[index];
+      
+      if (this.selectedDocument == element.title) {
+        console.log("YES");
+        console.log(element.content);
+        return element.content
+        
+      }
+    }
     
   }
 
