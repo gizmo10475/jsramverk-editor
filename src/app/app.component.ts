@@ -3,7 +3,6 @@ import { CustomOption } from "ngx-quill";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import Quill from 'quill';
 
 const modules = {
   toolbar: [
@@ -38,21 +37,19 @@ const modules = {
 export class AppComponent {
   myForm: FormGroup;
   form: FormGroup;
-  documents: [];
+  documents: string[] = [];;
+  content: string;
+  option: string;
   text: any;
   title: any;
-  test: string="TESTTEST";
-  allData: any;
+  test: string = "TESTTEST";
+  allData: any = {};
   allDataTitle: string[] = [];;
   selectedDocument: any;
-  editor: Quill | null = null;
-
-  content = '<h1>Test</h1><p>Hi There!</p>';
-
   constructor(
     private http: HttpClient,
     private formBuilder: FormBuilder,
-    ) {};
+  ) { };
 
 
   options: CustomOption[] = [
@@ -66,73 +63,86 @@ export class AppComponent {
     title: '',
   });
   checkoutForm2 = this.formBuilder.group({
-      docID: '',
+    docID: '',
   });
 
   onSubmit(): void {
     this.title = this.checkoutForm.value.title;
-    console.log(this.title);
-    console.log(this.text.text);
-    this.http.post<any>('http://localhost:1337/', { title: this.title, content: this.text.text }).subscribe(data => {
+
+    for (let index = 0; index < this.allData.length; index++) {
+      // const element = array[index];
+      if (this.allData[index].title == this.title) {
+
+        this.http.put<any>('https://jsramverk-backend.azurewebsites.net/', { id: this.allData[index]._id, newContent: this.text.html }).subscribe(data => {
+        })
+      }
+    }
+    if (!this.allDataTitle.includes(this.title)) {
+      this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, content: this.text.html }).subscribe(data => {
         // this.text.text = data.id;
-  })
+      })
+    }
+
+    setTimeout(() => {
+      this.allDataTitle.splice(0);
+
+      this.allData = {};
+
+      this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
+        this.allData = data;
+
+        for (let index = 0; index < this.allData.length; index++) {
+          this.allDataTitle.push(this.allData[index].title);
+        }
+      })
+    }, 2000);
+
+
   }
 
   ngOnInit() {
-    this.http.get<any>('http://localhost:1337/').subscribe(data => {
+    this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
       this.allData = data;
-      // console.log(this.allData);
-      
+
       for (let index = 0; index < this.allData.length; index++) {
         this.allDataTitle.push(this.allData[index].title);
       }
     })
-    console.log(this.allDataTitle);
-            
   }
 
   getDocuments() {
-    this.http.get<any>('http://localhost:1337/').subscribe(data => {
-        return data;
-    }) 
+    this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
+      return data;
+    })
   }
 
   @ViewChild('document') document!: ElementRef;
 
-	onSelected() {
-		this.selectedDocument = this.document.nativeElement.value;
-    console.log(this.selectedDocument);
-    
-	}
-
-  getOneDocument() {
-    console.log("hej");
-    
+  onSelected() {
+    this.selectedDocument = this.document.nativeElement.value;
+    this.option = this.selectedDocument;
     for (let index = 0; index < this.allData.length; index++) {
       const element = this.allData[index];
-      
+  
       if (this.selectedDocument == element.title) {
-        console.log("YES");
-        console.log(element.content);
-        return element.content
-        
+        this.content = element.content;
       }
     }
-    
+  }
+
+
+  getOneDocument() {
+
   }
 
   onContentChanged = (event) => {
-    // console.log(event.html);
     this.text = event;
-    // console.log(this.text);
   }
 
   public Save() {
-    console.log(this.text.text);
-
-    this.http.post<any>('http://localhost:1337/', { title: this.title, content: this.text.text }).subscribe(data => {
-        // this.text.text = data.id;
-  })
+    this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, content: this.text.text }).subscribe(data => {
+      // this.text.text = data.id;
+    })
   }
 
 }

@@ -4,22 +4,23 @@
 <div class="divquil">
 
   <label for="updateDoc">Ladda in dokument:</label>
-  
+
     <form ngNativeValidate [formGroup]="checkoutForm2" (ngSubmit)="getOneDocument()">
 
     <select #document (change)="onSelected()">
+      <option></option>
       <option *ngFor="let doc of allDataTitle; let i = index" [value]="allDataTitle[i]">
         {{allDataTitle[i]}}
       </option>
     </select>
-    <input type="submit" value="Ladda in">
+    <!-- <input type="submit" value="Ladda in"> -->
   </form>
 
 <br>
 <br><br>
   <form ngNativeValidate [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
-  
-    <input id="title" type="text" formControlName="title" required>
+
+    <input id="title" type="text" formControlName="title" required [ngModel]="option">
     <!-- <button class="button" type="submit">Purchase</button> -->
     <input type="submit" value="Spara">
   </form>
@@ -28,6 +29,6 @@
   <button type="submit" (click)="Save()">Spara</button> -->
   <br>
   <br>
-  <quill-editor (onContentChanged)="onContentChanged($event)"></quill-editor>
+  <quill-editor (onContentChanged)="onContentChanged($event)" [ngModel]="content"></quill-editor>
 
 </div>
