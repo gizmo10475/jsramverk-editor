@@ -20,12 +20,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - run: apt-get update # Remove if running outside container
-    - run: apt-get clean # Remove if running outside container
-    - run: apt-get install -y wget # Remove if running outside container
-    - run: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - # Remove if running outside container
-    - run: echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list # Remove if running outside container
-    - run: apt-get -y update # Remove if running outside container
     - run: apt-get install -y google-chrome-stable # If not running in docker then run this line with sudo
     - run: VERSION=`google-chrome --version | egrep -o '[0-9]+.[0-9]+' | head -1` # Get chrome version that we just installed
     - run: npm i webdriver-manager@latest -D # Install webdriver manager locally
