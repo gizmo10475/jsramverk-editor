@@ -1,12 +1,18 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+        FormsModule
       ],
       declarations: [
         AppComponent
@@ -20,16 +26,15 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'jsramverk-editor'`, () => {
+  it(`should have as title 'Eddies editor aka Eddietor'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    // expect(app.title).toEqual('jsramverk-editor');
+    expect(app.webTitle).toEqual('Eddies editor aka Eddietor');
   });
 
-  it('should render title', () => {
+  it(`should have the correct github url.'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('jsramverk-editor app is running!');
+    const link = fixture.debugElement.nativeElement.querySelector("a");
+    expect(link.getAttribute('href')).toBe('https://github.com/gizmo10475/jsramverk-editor')
   });
 });

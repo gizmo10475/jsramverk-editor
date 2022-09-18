@@ -1,5 +1,6 @@
 <div class="toolbar">
-  Eddies editor aka Eddietor
+  <a  href="https://github.com/gizmo10475/jsramverk-editor"><h2>{{webTitle}}</h2></a>
+  <!-- <img src="assets/images/github.png" alt="image"> -->
 </div>
 <div class="divquil">
 
@@ -7,7 +8,7 @@
 
     <form ngNativeValidate [formGroup]="checkoutForm2" (ngSubmit)="getOneDocument()">
 
-    <select #document (change)="onSelected()">
+    <select #document (change)="onSelected()" id="dropdown">
       <option></option>
       <option *ngFor="let doc of allDataTitle; let i = index" [value]="allDataTitle[i]">
         {{allDataTitle[i]}}
@@ -20,7 +21,7 @@
 <br><br>
   <form ngNativeValidate [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
 
-    <input id="title" type="text" formControlName="title" required [ngModel]="option">
+    <input id="title" type="text" formControlName="title" required [ngModel]="option" name="inputSave">
     <!-- <button class="button" type="submit">Purchase</button> -->
     <input type="submit" value="Spara">
   </form>

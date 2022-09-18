@@ -35,6 +35,7 @@ const modules = {
 
 
 export class AppComponent {
+  webTitle: string = "Eddies editor aka Eddietor"
   myForm: FormGroup;
   form: FormGroup;
   documents: string[] = [];;
@@ -123,7 +124,7 @@ export class AppComponent {
     this.option = this.selectedDocument;
     for (let index = 0; index < this.allData.length; index++) {
       const element = this.allData[index];
-  
+
       if (this.selectedDocument == element.title) {
         this.content = element.content;
       }
