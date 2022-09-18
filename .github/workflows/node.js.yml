@@ -20,7 +20,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - run: apt-get install -y google-chrome-stable # If not running in docker then run this line with sudo
+    - run: sudo apt-get install -y google-chrome-stable # If not running in docker then run this line with sudo
     - run: VERSION=`google-chrome --version | egrep -o '[0-9]+.[0-9]+' | head -1` # Get chrome version that we just installed
     - run: npm i webdriver-manager@latest -D # Install webdriver manager locally
     - run: npm i chromedriver --chromedriver_version=$VERSION -D # Install chrome driver to the version that we got from google chrome installation above
