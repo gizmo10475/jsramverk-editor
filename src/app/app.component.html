@@ -30,6 +30,10 @@
   <button type="submit" (click)="Save()">Spara</button> -->
   <br>
   <br>
-  <quill-editor (onContentChanged)="onContentChanged($event)" [ngModel]="content"></quill-editor>
+  <div (keyup)="onkeyup()">
+    <!-- <quill-editor [ngModel]="content"></quill-editor> -->
+    <quill-editor (onContentChanged)="onContentChanged($event)" [ngModel]="content"></quill-editor>
+  </div>
+  <!-- <quill-editor (keyup)="tester($event)" [ngModel]="content"></quill-editor> -->
 
 </div>

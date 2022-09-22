@@ -1,32 +1,13 @@
 import { Component, Input, ElementRef, ViewChild } from "@angular/core";
-import { CustomOption } from "ngx-quill";
+import { CustomOption,  } from "ngx-quill";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import { io } from "socket.io-client";
+import { SocketioService } from './socketio.service';
 
-const modules = {
-  toolbar: [
-    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
+const SOCKET_ENDPOINT = 'http://localhost:1337';
 
-    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
-    [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-    [{ 'direction': 'rtl' }],                         // text direction
-
-    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    [{ 'font': [] }],
-    [{ 'align': [] }],
-
-    ['clean'],                                         // remove formatting button
-
-    ['link', 'image', 'video']                         // link and image, video
-  ]
-};
 
 @Component({
   selector: "app-root",
@@ -34,7 +15,7 @@ const modules = {
 })
 
 
-export class AppComponent {
+export class AppComponent{
   webTitle: string = "Eddies editor aka Eddietor"
   myForm: FormGroup;
   form: FormGroup;
@@ -47,9 +28,14 @@ export class AppComponent {
   allData: any = {};
   allDataTitle: string[] = [];;
   selectedDocument: any;
+  socket;
+  editorInstance;
+  message: string;
+  sendToSocket = true;
   constructor(
     private http: HttpClient,
     private formBuilder: FormBuilder,
+    private socketService: SocketioService
   ) { };
 
 
@@ -66,6 +52,24 @@ export class AppComponent {
   checkoutForm2 = this.formBuilder.group({
     docID: '',
   });
+
+  ngOnInit() {
+
+    this.socketService.setupSocketConnection();
+
+    this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
+      this.allData = data;
+
+      for (let index = 0; index < this.allData.length; index++) {
+        this.allDataTitle.push(this.allData[index].title);
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.socketService.disconnect();
+  }
+
 
   onSubmit(): void {
     this.title = this.checkoutForm.value.title;
@@ -97,18 +101,6 @@ export class AppComponent {
         }
       })
     }, 2000);
-
-
-  }
-
-  ngOnInit() {
-    this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
-      this.allData = data;
-
-      for (let index = 0; index < this.allData.length; index++) {
-        this.allDataTitle.push(this.allData[index].title);
-      }
-    })
   }
 
   getDocuments() {
@@ -120,8 +112,19 @@ export class AppComponent {
   @ViewChild('document') document!: ElementRef;
 
   onSelected() {
+
+    this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
+      this.allData = data;
+    })
+
     this.selectedDocument = this.document.nativeElement.value;
     this.option = this.selectedDocument;
+
+    this.socketService.socket.emit('text option', this.selectedDocument)
+    this.socketService.socket.on('server option', (data: string) => {
+      this.option = data;
+    });
+
     for (let index = 0; index < this.allData.length; index++) {
       const element = this.allData[index];
 
@@ -136,8 +139,36 @@ export class AppComponent {
 
   }
 
+  onkeyup() {
+    this.socketService.socket.emit('text editor', this.text.html)
+  }
+
+  created(editorInstance) {
+    this.editorInstance = editorInstance;
+  }
+
   onContentChanged = (event) => {
     this.text = event;
+
+    // console.log(this.text);
+    
+
+    // console.log("event.editor");
+    this.socketService.socket.on('server editor', (data: string) => {
+      // this.editorInstance.setContents([{ insert: data }]);
+      // console.log(this.editorInstance);
+      // console.log(data);
+
+      this.content = data
+
+    })
+
+    // this.socketService.socket.emit('text editor', this.text.html)
+    // this.socketService.socket.on('server editor', (data: string) => {
+    //   // this.editorInstance.setContents([{ insert: data }]);
+    //   // console.log(this.editorInstance);
+    //   this.content = data
+    // });
   }
 
   public Save() {
