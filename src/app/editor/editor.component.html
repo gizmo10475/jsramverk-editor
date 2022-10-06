@@ -1,0 +1,46 @@
+<div class="notlog" *ngIf="!authService.loggedIn()">
+
+    <h2>Du är inte inloggad, logga in <a routerLink="/login">här</a></h2>
+
+</div>
+<div class="divquil" *ngIf="authService.loggedIn()">
+
+    <label for="updateDoc">Ladda in dokument:</label>
+
+    <form ngNativeValidate [formGroup]="checkoutForm2" (ngSubmit)="getOneDocument()">
+
+        <select #document (change)="onSelected()" id="dropdown">
+            <option></option>
+            <option *ngFor="let doc of allDataTitle; let i = index" [value]="allDataTitle[i]">
+                {{allDataTitle[i]}}
+            </option>
+        </select>
+        <!-- <input type="submit" value="Ladda in"> -->
+    </form>
+
+    <br>
+    <br><br>
+    <form ngNativeValidate [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+        <label>Dokumentets namn</label><br>
+        <input id="title" type="text" formControlName="title" required [ngModel]="option" name="inputSave"
+            placeholder="Dokumentets namn">
+        <br><br>
+        <label>Skriv en email om du vill lägga till fler användare till detta dokumentet</label><br>
+        <input id="newCollab" type="text" formControlName="newCollab" name="newCollab" placeholder="Email">
+
+        <!-- <button class="button" type="submit">Purchase</button> -->
+        <input type="submit" value="Spara">
+    </form>
+
+    <!-- <input placeholder="Titel">
+        <button type="submit" (click)="Save()">Spara</button> -->
+    <br>
+    <br>
+    <div (keyup)="onkeyup()">
+        <!-- <quill-editor [ngModel]="content"></quill-editor> -->
+        <quill-editor (onContentChanged)="onContentChanged($event)" [ngModel]="content"></quill-editor>
+    </div>
+    <!-- <quill-editor (keyup)="tester($event)" [ngModel]="content"></quill-editor> -->
+    <br><br><br><br>
+    <button (click)="logOut()">Logga ut</button>
+</div>
