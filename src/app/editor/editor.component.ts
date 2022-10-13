@@ -33,6 +33,9 @@ export class EditorComponent {
   selectedDocument: any;
   socket;
   editorInstance;
+  contentID;
+  idcollab: any = {};
+  contentEDITORS;
   message: string;
   sendToSocket = true;
   constructor(
@@ -78,8 +81,9 @@ export class EditorComponent {
         }
       }
       // console.log(email);
-      
+
     })
+
     // setTimeout(() => { console.log(this.allData); }, 2000)
   }
 
@@ -150,10 +154,13 @@ export class EditorComponent {
   @ViewChild('document') document!: ElementRef;
 
   onSelected() {
+    this.contentID = "";
+    this.contentEDITORS = "";
 
     this.http.get<any>('https://jsramverk-backend.azurewebsites.net/').subscribe(data => {
       this.allData = data;
     })
+
 
     this.selectedDocument = this.document.nativeElement.value;
     this.option = this.selectedDocument;
@@ -168,8 +175,29 @@ export class EditorComponent {
 
       if (this.selectedDocument == element.title) {
         this.content = element.content;
+        this.contentID = element._id;
       }
     }
+
+    fetch('https://jsramverk-backend.azurewebsites.net/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ query: "{alldata {_id, collab}}" })
+    })
+      .then(r => r.json())
+      .then(data => this.idcollab = data.data.alldata);
+
+
+      setTimeout(() => {
+        for (let index = 0; index < this.idcollab.length; index++) {
+          if (this.contentID == this.idcollab[index]._id) {
+            this.contentEDITORS = this.idcollab[index].collab
+          }
+        }
+      }, 600);
   }
 
 
