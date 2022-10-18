@@ -115,10 +115,14 @@ export class EditorComponent {
           this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, collab: [email, this.checkoutForm.value.newCollab], content: this.text.html }).subscribe(data => {
             // this.text.text = data.id;
           })
+          this.http.post<any>('https://jsramverk-backend.azurewebsites.net/sendmail', { title: this.title, sendToEmail: this.checkoutForm.value.newCollab, email: email }).subscribe(data => {
+            // this sends the email
+            console.log(this.checkoutForm.value.newCollab);
+          })
         }
         if (!this.checkoutForm.value.newCollab) {
           this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, collab: [email], content: this.text.html }).subscribe(data => {
-            // this.text.text = data.id;
+            // this adds the collab
           })
         }
       }
