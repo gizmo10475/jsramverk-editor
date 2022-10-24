@@ -6,9 +6,17 @@ import { of, timeInterval } from 'rxjs';
 import { io } from "socket.io-client";
 import { SocketioService } from './socketio.service';
 import { AuthService } from "../auth.service";
+import { pdfExporter } from "quill-to-pdf";
+import { saveAs } from "file-saver";
+import jsPDF from 'jspdf';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import htmlToPdfmake from 'html-to-pdfmake';
+
 
 const SOCKET_ENDPOINT = 'http://localhost:1337';
-
+declare let Quill;
 
 @Component({
   selector: "app-root",
@@ -45,6 +53,7 @@ export class EditorComponent {
     public authService: AuthService
   ) { };
 
+  private quillInstance: any;
 
   options: CustomOption[] = [
     {
@@ -61,6 +70,21 @@ export class EditorComponent {
     docID: '',
   });
 
+  async exportPdf() {
+    const doc = new jsPDF();
+
+    const pdfTable = this.text.html;
+
+    var html = htmlToPdfmake(pdfTable);
+
+    const documentDefinition = { content: html };
+    pdfMake.createPdf(documentDefinition).download();
+
+  }
+
+
+  // //////////////////////////////////////////////////////////////////////////////////////////////////////
+
   ngOnInit() {
     this.socketService.setupSocketConnection();
     const email = this.authService.getEmail();
@@ -73,7 +97,6 @@ export class EditorComponent {
         if (this.allData[index].collab) {
           for (let i = 0; i < this.allData[index].collab.length; i++) {
             // console.log(this.allData[index].collab[i], "----", email);
-            
             if (this.allData[index].collab[i] == email) {
               this.allDataTitle.push(this.allData[index].title);
             }
@@ -83,7 +106,6 @@ export class EditorComponent {
       // console.log(email);
 
     })
-
     // setTimeout(() => { console.log(this.allData); }, 2000)
   }
 
@@ -213,9 +235,9 @@ export class EditorComponent {
     this.socketService.socket.emit('text editor', this.text.html)
   }
 
-  created(editorInstance) {
-    this.editorInstance = editorInstance;
-  }
+  // created(editorInstance) {
+  //   this.editorInstance = editorInstance;
+  // }
 
   onContentChanged = (event) => {
     this.text = event;

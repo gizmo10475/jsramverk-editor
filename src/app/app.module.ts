@@ -12,7 +12,6 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { EditorComponent } from './editor/editor.component';
 import { AppRoutingModule } from './app-routing.module';
-// const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
 
 @NgModule({
   imports: [RouterModule, BrowserModule, ReactiveFormsModule, FormsModule, QuillModule.forRoot(), HttpClientModule, AppRoutingModule],
