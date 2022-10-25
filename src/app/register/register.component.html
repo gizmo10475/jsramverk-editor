@@ -1,10 +1,14 @@
-<h1>Registrera</h1>
+<div class="container">
+    <h1>Registrera ny användare</h1>
 
-<form ngNativeValidate (submit)="registerUser($event)">
-    <input type="email" placeholder="E-post" [ngModel]="email" name="email" id="email">
-    <input type="password" placeholder="Lösenord" [ngModel]="password" id="password" name="password">
-    <input type="submit">
-</form>
+    <form ngNativeValidate (submit)="registerUser($event)">
+        <input type="email" placeholder="E-post" [ngModel]="email" name="email" id="email"><br><br>
+        <input type="password" placeholder="Lösenord" [ngModel]="password" id="password" name="password"><br><br>
+        <input type="submit">
+    </form>
+
+    <br><br>
+    <p> Har du redan ett konto? <a routerLink="/login">Logga in</a></p>
 
 
-<a routerLink="/login">Logga in</a>
+</div>

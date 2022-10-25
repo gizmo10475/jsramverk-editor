@@ -1,5 +1,5 @@
 import { Component, Input, ElementRef, ViewChild } from "@angular/core";
-import { CustomOption,  } from "ngx-quill";
+import { CustomOption, } from "ngx-quill";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { HttpClient } from '@angular/common/http';
 import { of, timeInterval } from 'rxjs';
@@ -82,9 +82,6 @@ export class EditorComponent {
 
   }
 
-
-  // //////////////////////////////////////////////////////////////////////////////////////////////////////
-
   ngOnInit() {
     this.socketService.setupSocketConnection();
     const email = this.authService.getEmail();
@@ -96,17 +93,13 @@ export class EditorComponent {
 
         if (this.allData[index].collab) {
           for (let i = 0; i < this.allData[index].collab.length; i++) {
-            // console.log(this.allData[index].collab[i], "----", email);
             if (this.allData[index].collab[i] == email) {
               this.allDataTitle.push(this.allData[index].title);
             }
           }
         }
       }
-      // console.log(email);
-
     })
-    // setTimeout(() => { console.log(this.allData); }, 2000)
   }
 
   ngOnDestroy() {
@@ -123,31 +116,31 @@ export class EditorComponent {
 
     for (let index = 0; index < this.allData.length; index++) {
       // const element = array[index];
-        if (this.allData[index].title == this.title) {
-          this.http.put<any>('https://jsramverk-backend.azurewebsites.net/', { id: this.allData[index]._id, newContent: this.text.html }).subscribe(data => {
-          })
-          if (this.checkoutForm.value.newCollab) {
-            this.http.put<any>('https://jsramverk-backend.azurewebsites.net/addCollab', { id: this.allData[index]._id, newCollab: this.checkoutForm.value.newCollab }).subscribe(data => {
-            })
-          }
-        }
-      }
-      if (!this.allDataTitle.includes(this.title)) {
+      if (this.allData[index].title == this.title) {
+        this.http.put<any>('https://jsramverk-backend.azurewebsites.net/', { id: this.allData[index]._id, newContent: this.text.html }).subscribe(data => {
+        })
         if (this.checkoutForm.value.newCollab) {
-          this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, collab: [email, this.checkoutForm.value.newCollab], content: this.text.html }).subscribe(data => {
-            // this.text.text = data.id;
-          })
-          this.http.post<any>('https://jsramverk-backend.azurewebsites.net/sendmail', { title: this.title, sendToEmail: this.checkoutForm.value.newCollab, email: email }).subscribe(data => {
-            // this sends the email
-            console.log(this.checkoutForm.value.newCollab);
-          })
-        }
-        if (!this.checkoutForm.value.newCollab) {
-          this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, collab: [email], content: this.text.html }).subscribe(data => {
-            // this adds the collab
+          this.http.put<any>('https://jsramverk-backend.azurewebsites.net/addCollab', { id: this.allData[index]._id, newCollab: this.checkoutForm.value.newCollab }).subscribe(data => {
           })
         }
       }
+    }
+    if (!this.allDataTitle.includes(this.title)) {
+      if (this.checkoutForm.value.newCollab) {
+        this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, collab: [email, this.checkoutForm.value.newCollab], content: this.text.html }).subscribe(data => {
+          // this.text.text = data.id;
+        })
+        this.http.post<any>('https://jsramverk-backend.azurewebsites.net/sendmail', { title: this.title, sendToEmail: this.checkoutForm.value.newCollab, email: email }).subscribe(data => {
+          // this sends the email
+          console.log(this.checkoutForm.value.newCollab);
+        })
+      }
+      if (!this.checkoutForm.value.newCollab) {
+        this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, collab: [email], content: this.text.html }).subscribe(data => {
+          // this adds the collab
+        })
+      }
+    }
 
     setTimeout(() => {
       this.allDataTitle.splice(0);
@@ -217,15 +210,14 @@ export class EditorComponent {
       .then(data => this.idcollab = data.data.alldata);
 
 
-      setTimeout(() => {
-        for (let index = 0; index < this.idcollab.length; index++) {
-          if (this.contentID == this.idcollab[index]._id) {
-            this.contentEDITORS = this.idcollab[index].collab
-          }
+    setTimeout(() => {
+      for (let index = 0; index < this.idcollab.length; index++) {
+        if (this.contentID == this.idcollab[index]._id) {
+          this.contentEDITORS = this.idcollab[index].collab
         }
-      }, 600);
+      }
+    }, 600);
   }
-
 
   getOneDocument() {
 
@@ -235,35 +227,14 @@ export class EditorComponent {
     this.socketService.socket.emit('text editor', this.text.html)
   }
 
-  // created(editorInstance) {
-  //   this.editorInstance = editorInstance;
-  // }
-
   onContentChanged = (event) => {
     this.text = event;
-
-
-    // console.log("event.editor");
     this.socketService.socket.on('server editor', (data: string) => {
-      // this.editorInstance.setContents([{ insert: data }]);
-      // console.log(this.editorInstance);
-      // console.log(data);
-
       this.content = data
-
     })
-
-    // this.socketService.socket.emit('text editor', this.text.html)
-    // this.socketService.socket.on('server editor', (data: string) => {
-    //   // this.editorInstance.setContents([{ insert: data }]);
-    //   // console.log(this.editorInstance);
-    //   this.content = data
-    // });
   }
-
   public Save() {
     this.http.post<any>('https://jsramverk-backend.azurewebsites.net/', { title: this.title, content: this.text.text }).subscribe(data => {
-      // this.text.text = data.id;
     })
   }
 

@@ -1,9 +1,12 @@
-<h1>Logga in</h1>
+<div class="container">
+    <h1>Logga in</h1>
 
-<form ngNativeValidate (submit)="loginUser($event)">
-    <input type="email" placeholder="E-post" [ngModel]="email" name="email" id="email">
-    <input type="password" placeholder="Lösenord" [ngModel]="password" id="password" name="password">
-    <input type="submit">
-</form>
+    <form ngNativeValidate (submit)="loginUser($event)">
+        <input type="email" placeholder="E-post" [ngModel]="email" name="email" id="email">
+        <input type="password" placeholder="Lösenord" [ngModel]="password" id="password" name="password">
+        <input type="submit">
+    </form>
 
-<a routerLink="/register">Registrera</a>
+    <p>Inget konto? <a routerLink="/register">Registrera</a></p>
+
+</div>
